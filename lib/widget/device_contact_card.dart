@@ -24,13 +24,13 @@ class DeviceContactCard extends StatelessWidget {
 }
 
 
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(6)),
-      height: 80,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(6)),
+        // height: 80,
+        width: double.infinity,
         child: InkWell(
           onTap: () => _save(index),
           child: ListTile(

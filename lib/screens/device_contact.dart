@@ -42,12 +42,12 @@ class _DeviceContactState extends State<DeviceContact> {
                   child: Text('No contacts found.'),
                 );
               } else {
-                DeviceContacts=snapshot.data!;
+                // DeviceContacts=snapshot.data!;
                 return 
                   ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      Contact contact = DeviceContacts[index];
+                      Contact contact = snapshot.data![index];
                       return DeviceContactCard(index: index, contact: contact,);
                     },
                   );

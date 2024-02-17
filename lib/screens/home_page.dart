@@ -1,4 +1,5 @@
 import 'package:contacts/provider/device_contact_provider.dart';
+import 'package:contacts/screens/bulk_import.dart';
 import 'package:contacts/screens/device_contact.dart';
 import 'package:contacts/screens/update_contact.dart';
 import 'package:contacts/widget/contact_card.dart';
@@ -80,6 +81,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           SpeedDialChild(
+            onTap:(){ Navigator.push(ctx, MaterialPageRoute(builder: (context) =>bulkUpload() ,));},
             shape: const CircleBorder(),
             labelWidget: const Text('Import Contacts'),
             child: const Icon(
