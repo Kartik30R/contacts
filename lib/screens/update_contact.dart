@@ -105,7 +105,7 @@ void initState() {
                             height: 30,
                             child: Row(
                               mainAxisSize: MainAxisSize
-                                  .min, // Ensure row takes minimum space
+                                  .min, 
                               children: [
                                 Text(
                                   "Mobile",
@@ -116,7 +116,7 @@ void initState() {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 8, // Adjust width between text and icon
+                                  width: 8, 
                                 ),
                                 Icon(Icons.arrow_drop_up_rounded),
                                 Container(
@@ -156,7 +156,7 @@ void initState() {
                             height: 30,
                             child: Row(
                               mainAxisSize: MainAxisSize
-                                  .min, // Ensure row takes minimum space
+                                  .min, 
                               children: [
                                 Text(
                                   "Work",

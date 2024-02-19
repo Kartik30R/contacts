@@ -1,22 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:contacts/data&models/contact.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:contacts/data&models/lists.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ContactProvider extends ChangeNotifier {
   late SharedPreferences sp;
   int selectedIndex = -1;
-  List<ContactModel> contacts = [];
 
   int getLength() {
     return contacts.length;
   }
 
-  void update(int index, String name, String contact, String email, int depindex) {
+  void update(
+      int index, String name, String contact, String email, int depindex) {
     contacts[index].name = name;
     contacts[index].contact = contact;
     contacts[index].email = email;
@@ -25,7 +28,8 @@ class ContactProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onsave(String name, String email, String phone, int depindex) async {
+  Future<void> onsave(
+      String name, String email, String phone, int depindex) async {
     print('run');
     contacts.add(ContactModel(
         name: name, contact: phone, email: email, depindex: depindex));
@@ -92,49 +96,42 @@ class ContactProvider extends ChangeNotifier {
           .toList();
       notifyListeners();
     }
-
-
-    
   }
 
-//  void pickFile(BuildContext context) async {
-//     List<List<dynamic>> _data = [];
-//     String? filePath;
+  Future<void> getCsv() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+    ].request();
 
-//     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    List<List<dynamic>> rows = [];
+    List<dynamic> headerRow = ["number", "email", "name", "department"];
+    rows.add(headerRow);
 
-//     // if no file is picked
-//     if (result == null) return;
-//     // we will log the name, size and path of the
-//     // first picked file (if multiple are selected)
-//     print(result.files.first.name);
-//     filePath = result.files.first.path!;
+    for (int i = 0; i < contacts.length; i++) {
+      List<dynamic> row = [
+        contacts[i].name,
+        Department.values[contacts[i].depindex].toString(),
+        contacts[i].contact,
+        contacts[i].email,
+      ];
+      rows.add(row);
+    }
 
-//     final input = File(filePath!).openRead();
-//     final fields = await input
-//         .transform(utf8.decoder)
-//         .transform(const CsvToListConverter())
-//         .toList();
-//     print(fields);
+    String csv = const ListToCsvConverter().convert(rows);
 
-//     for (var field in fields) {
-//       if (field.length >= 3) {
-//         String name = field[0];
-//         String contact = field[1].toString();
-//         String email = field[2];
-//         int depindex = Department.Other.index;
-//         if (field.length > 3) {
-//           String department = field[3].toString();
-//           depindex = Department.values.indexWhere((e) => e.toString().split('.')[1] == department);
-//           if (depindex == -1) {
-//             depindex = Department.Other.index;
-//           }
-//         }
-        
-//         onsave(name, email, contact, depindex);
-//         print('saved');
-//       }
-//     }
-//     notifyListeners();
-//   }
+    Directory? directory = await getExternalStorageDirectory();
+    if (directory != null) {
+      String dir = directory.path;
+      print("dir $dir");
+      String filePath = "$dir/filename.csv";
+      File file = File(filePath);
+
+      await file.writeAsString(csv);
+      print("CSV file saved at: $filePath");
+    } else {
+      print("Error: Unable to access external storage directory.");
+    }
+
+    notifyListeners();
+  }
 }

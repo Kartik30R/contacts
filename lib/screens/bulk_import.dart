@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
 import 'package:provider/provider.dart';
-import 'package:contacts/provider/contact_provider.dart'; // Import your ContactProvider
+import 'package:contacts/provider/contact_provider.dart'; 
 
 class BulkUpload extends StatefulWidget {
   const BulkUpload({Key? key}) : super(key: key);
@@ -23,6 +23,14 @@ class _BulkUploadState extends State<BulkUpload> {
 
     return Scaffold(
       appBar: AppBar(
+        actions: [TextButton(onPressed: (){ for (int i = 1; i < _data.length; i++) {
+                contactProvider.onsave(
+                  _data[i][0].toString(),
+                  _data[i][2].toString(),
+                  _data[i][1].toString(),
+                  0, 
+                );
+              }}, child: Text('save'))],
         title: const Text(
           "Bulk Upload",
           style: TextStyle(
@@ -42,7 +50,7 @@ class _BulkUploadState extends State<BulkUpload> {
                   _data[i][0].toString(),
                   _data[i][2].toString(),
                   _data[i][1].toString(),
-                  0, // Assuming department index is 0 for now
+                  0,
                 );
               }
             },

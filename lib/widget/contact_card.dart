@@ -7,7 +7,7 @@ Widget getRow(int index, BuildContext context,List<ContactModel> contacts) {
     child: Container(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(6)),
-      height: 120,
+      height: 130,
       width: double.infinity,
       child: ListTile(
           leading: Container(
