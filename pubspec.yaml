@@ -46,6 +46,8 @@ dependencies:
   csv: ^5.1.1
   file_picker: ^6.1.1
   excel: ^4.0.2
+  iconly: ^1.0.1
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

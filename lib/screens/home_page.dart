@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:contacts/provider/device_contact_provider.dart';
 import 'package:contacts/screens/bulk_import.dart';
 import 'package:contacts/screens/device_contact.dart';
@@ -6,6 +9,8 @@ import 'package:contacts/widget/contact_card.dart';
 import 'package:contacts/data&models/lists.dart';
 import 'package:contacts/provider/contact_provider.dart';
 import 'package:contacts/screens/new_contact.dart';
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,7 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    context.read<ContactProvider>().getSharedPrefrences();
+    context.read<ContactProvider>().getSharedPreferences();
     context.read<DeviceContactsProvider>().getContacts();
     print(contacts);
     super.initState();
@@ -81,7 +86,11 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           SpeedDialChild(
-            onTap:(){ Navigator.push(ctx, MaterialPageRoute(builder: (context) =>bulkUpload() ,));},
+            onTap: () {
+            
+              Navigator.push(
+                  ctx, MaterialPageRoute(builder: (context) => BulkUpload()));
+            },
             shape: const CircleBorder(),
             labelWidget: const Text('Import Contacts'),
             child: const Icon(
@@ -102,16 +111,46 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: value.getlength(),
+                        itemCount: value.getLength(),
                         itemBuilder: (context, index) => InkWell(
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         updateContact(index: index))),
-                            child: getRow(index, ctx, false, contacts)),
+                            child: Dismissible(
+                                key: ValueKey(contacts[index]),
+                                onDismissed: (direction) {
+                                  value.onremove(index);
+                                },
+                                child: getRow(index, ctx, contacts))),
                       ),
               )),
     );
+  }
+
+  void _pickFile() async {
+    List<List<dynamic>> _data = [];
+    String? filePath;
+
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+    // if no file is picked
+    if (result == null) return;
+    // we will log the name, size and path of the
+    // first picked file (if multiple are selected)
+    print(result.files.first.name);
+    filePath = result.files.first.path!;
+
+    final input = File(filePath!).openRead();
+    final fields = await input
+        .transform(utf8.decoder)
+        .transform(const CsvToListConverter())
+        .toList();
+    print(fields);
+
+    setState(() {
+      _data = fields;
+    });
   }
 }

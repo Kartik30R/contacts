@@ -1,9 +1,9 @@
 enum Department { Other, HR, Technology, Marketing }
 
 class ContactModel {
-  String name;
-  String contact;
-  String email;
+  String? name;
+  String? contact;
+  String? email;
   int depindex;
   ContactModel(
       {required this.name,

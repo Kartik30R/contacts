@@ -1,7 +1,7 @@
 import 'package:contacts/data&models/contact.dart';
 import 'package:flutter/material.dart';
 
-Widget getRow(int index, BuildContext context, bool select,List contacts) {
+Widget getRow(int index, BuildContext context,List<ContactModel> contacts) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Container(
@@ -19,7 +19,9 @@ Widget getRow(int index, BuildContext context, bool select,List contacts) {
             ),
             child: Center(
               child: Text(
-                contacts[index].name[0].toUpperCase(),
+              contacts[index].name!.isNotEmpty
+                    ? contacts[index].name!.substring(0, 1).toUpperCase()
+                    : '?',
                 style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 20,color: Colors.black),
               ),
             ),
@@ -30,7 +32,7 @@ Widget getRow(int index, BuildContext context, bool select,List contacts) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  contacts[index].name.toUpperCase(),
+                  contacts[index].name!.toUpperCase(),
                   style:
                       const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
@@ -42,12 +44,11 @@ Widget getRow(int index, BuildContext context, bool select,List contacts) {
                             : Color.fromARGB(255, 255, 180, 202),
                         borderRadius: BorderRadius.circular(4)),
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    child: Text(select? Department.values[0].toString():
-                      Department.values[contacts[index].depindex].name,
+                    child: Text( Department.values[0].name,
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.black),
                     )),
-                Text( select? contacts[index].phones.first:contacts[index].contact),
-                Text(select? contacts[index].emails.first :contacts[index].email),
+                Text(  contacts[index].contact!),
+                Text(contacts[index].email!),
                
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:contacts/data&models/contact.dart';
 import 'package:contacts/data&models/lists.dart';
 import 'package:contacts/provider/device_contact_provider.dart';
 import 'package:contacts/widget/device_contact_card.dart';
@@ -13,7 +14,6 @@ class DeviceContact extends StatefulWidget {
 }
 
 class _DeviceContactState extends State<DeviceContact> {
- 
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _DeviceContactState extends State<DeviceContact> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text('No contacts found.'),
                 );
               } else {
@@ -48,7 +48,7 @@ class _DeviceContactState extends State<DeviceContact> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       Contact contact = snapshot.data![index];
-                      return DeviceContactCard(index: index, contact: contact,);
+                      return DeviceContactCard(index: index, contact: contact, );
                     },
                   );
                 
